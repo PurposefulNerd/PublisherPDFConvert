@@ -1,0 +1,34 @@
+<!--
+  Optional project file for building with the .NET SDK or Visual Studio.
+  You do NOT need this to build: run build.ps1, which uses the C# compiler
+  already included with Windows (no SDK required).
+
+  If you have the .NET SDK or Visual Studio, you can instead run:
+      dotnet build -c Release
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>PublisherToPdf</AssemblyName>
+    <RootNamespace>PublisherToPdf</RootNamespace>
+    <ApplicationManifest>src\app.manifest</ApplicationManifest>
+    <PlatformTarget>x64</PlatformTarget>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\*.cs" />
+    <Compile Include="src\Program.cs" />
+    <Compile Include="src\MainForm.cs" />
+    <Compile Include="src\PublisherConverter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>
