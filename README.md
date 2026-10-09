@@ -174,3 +174,8 @@ object model (including its traps) and the feature-by-feature mapping are in
 The test loop is: `tools\New-ProbePublication.ps1 -OutDir probe`, then
 `tools\Test-IdmlExport.ps1 -PubFile probe\synthetic.pub -OutDir out -DesignCraftCli <path>\designcraft-cli.exe`,
 then look at `out\synthetic-pages\*.png` next to Publisher's own rendering.
+
+## License
+
+[MIT](LICENSE). The app drives a licensed copy of Microsoft Publisher on your own
+machine; nothing from Publisher is redistributed.
