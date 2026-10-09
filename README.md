@@ -10,6 +10,10 @@ lets you keep editing your publications in another application.
 
 ![Windows 10 / 11](https://img.shields.io/badge/Windows-10%20%2F%2011-blue)
 
+**Download:** the ready-built `PublisherToPdf.exe` is attached to the
+[latest release](https://github.com/PurposefulNerd/PublisherPDFConvert/releases/latest).
+No installation; it needs only Windows 10/11 and Microsoft Publisher.
+
 ## What it does
 
 - Add **one or several** `.pub` files (button, or drag-and-drop files/folders onto the window)

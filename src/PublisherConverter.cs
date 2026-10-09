@@ -180,13 +180,16 @@ namespace PublisherToPdf
         /// </summary>
         private T Retrying<T>(Func<T> op)
         {
-            try { return op(); }
-            catch (Exception ex)
+            for (int attempt = 1; ; attempt++)
             {
-                if (!IsPublisherGone(ex)) throw;
-                Phase("Publisher went away (" + ex.Message + "); restarting");
-                Restart();
-                return op();
+                try { return op(); }
+                catch (Exception ex)
+                {
+                    if (!IsPublisherGone(ex) || attempt >= 3) throw;
+                    Phase("Publisher went away (" + ex.Message + "); restarting (attempt " + attempt + ")");
+                    System.Threading.Thread.Sleep(2000 * attempt);   // let the crashed instance finish dying
+                    Restart();
+                }
             }
         }
 

@@ -18,6 +18,8 @@
     <ApplicationManifest>src\app.manifest</ApplicationManifest>
     <PlatformTarget>x64</PlatformTarget>
     <Deterministic>true</Deterministic>
+    <!-- Version attributes live in src\AssemblyInfo.cs so build.ps1 and the SDK agree. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>

@@ -47,7 +47,8 @@ namespace PublisherToPdf
 
         private void BuildUi()
         {
-            Text = "Publisher to PDF / IDML Converter";
+            var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            Text = "Publisher to PDF / IDML Converter " + ver.Major + "." + ver.Minor;
             Font = new Font("Segoe UI", 9F);
             Size = new Size(780, 630);
             MinimumSize = new Size(620, 550);
