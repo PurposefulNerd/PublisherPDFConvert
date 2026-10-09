@@ -22,7 +22,7 @@ if (-not (Test-Path $csc)) {
 
 New-Item -ItemType Directory -Force -Path $bin | Out-Null
 
-$sources = Get-ChildItem -Path $src -Filter *.cs | ForEach-Object { $_.FullName }
+$sources = Get-ChildItem -Path $src -Filter *.cs -Recurse | ForEach-Object { $_.FullName }
 $manifest = Join-Path $src 'app.manifest'
 
 $refs = @(
@@ -30,6 +30,10 @@ $refs = @(
     '/r:System.Core.dll',
     '/r:System.Drawing.dll',
     '/r:System.Windows.Forms.dll',
+    '/r:System.Xml.dll',
+    '/r:System.IO.Compression.dll',
+    '/r:System.IO.Compression.FileSystem.dll',
+    '/r:System.Web.Extensions.dll',
     '/r:Microsoft.CSharp.dll'
 )
 

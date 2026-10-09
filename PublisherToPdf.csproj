@@ -22,13 +22,15 @@
 
   <ItemGroup>
     <Compile Remove="**\*.cs" />
-    <Compile Include="src\Program.cs" />
-    <Compile Include="src\MainForm.cs" />
-    <Compile Include="src\PublisherConverter.cs" />
+    <Compile Include="src\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Web.Extensions" />
   </ItemGroup>
 
 </Project>

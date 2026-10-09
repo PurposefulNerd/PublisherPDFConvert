@@ -20,6 +20,9 @@ namespace PublisherToPdf
         private Button _btnRemove;
         private Button _btnClear;
 
+        private RadioButton _rdoPdf;
+        private RadioButton _rdoIdml;
+        private RadioButton _rdoBoth;
         private RadioButton _rdoSameFolder;
         private RadioButton _rdoCustomFolder;
         private TextBox _txtOutput;
@@ -44,10 +47,10 @@ namespace PublisherToPdf
 
         private void BuildUi()
         {
-            Text = "Publisher to PDF Converter";
+            Text = "Publisher to PDF / IDML Converter";
             Font = new Font("Segoe UI", 9F);
-            Size = new Size(780, 600);
-            MinimumSize = new Size(620, 520);
+            Size = new Size(780, 630);
+            MinimumSize = new Size(620, 550);
             StartPosition = FormStartPosition.CenterScreen;
             AllowDrop = true;
             DragEnter += MainForm_DragEnter;
@@ -55,7 +58,7 @@ namespace PublisherToPdf
 
             var intro = new Label
             {
-                Text = "Add one or more Microsoft Publisher (.pub) files, choose where to save the PDFs, then click Convert.",
+                Text = "Add one or more Microsoft Publisher (.pub) files, choose a format and where to save, then click Convert.",
                 Dock = DockStyle.Top,
                 Padding = new Padding(12, 12, 12, 6),
                 Height = 40,
@@ -91,27 +94,39 @@ namespace PublisherToPdf
                 Text = "Output",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 Location = new Point(12, 300),
-                Size = new Size(680, 150)
+                Size = new Size(680, 178)
             };
+
+            // Format row: three radios in their own panel so they form one group.
+            var formatPanel = new Panel { Location = new Point(14, 20), Size = new Size(650, 26) };
+            var lblFormat = new Label { Text = "Format:", Location = new Point(0, 4), AutoSize = true };
+            _rdoPdf = new RadioButton { Text = "PDF", Location = new Point(60, 2), AutoSize = true, Checked = true };
+            _rdoIdml = new RadioButton { Text = "IDML (editable: DesignCraft, InDesign, Affinity Publisher)", Location = new Point(120, 2), AutoSize = true };
+            _rdoBoth = new RadioButton { Text = "Both", Location = new Point(500, 2), AutoSize = true };
+            EventHandler formatChanged = (s, e) => UpdateButtons();
+            _rdoPdf.CheckedChanged += formatChanged;
+            _rdoIdml.CheckedChanged += formatChanged;
+            _rdoBoth.CheckedChanged += formatChanged;
+            formatPanel.Controls.AddRange(new Control[] { lblFormat, _rdoPdf, _rdoIdml, _rdoBoth });
 
             _rdoSameFolder = new RadioButton
             {
-                Text = "Save each PDF next to its original .pub file",
-                Location = new Point(14, 24),
+                Text = "Save each output next to its original .pub file",
+                Location = new Point(14, 50),
                 AutoSize = true,
                 Checked = true
             };
             _rdoCustomFolder = new RadioButton
             {
-                Text = "Save all PDFs to this folder:",
-                Location = new Point(14, 52),
+                Text = "Save all output to this folder:",
+                Location = new Point(14, 78),
                 AutoSize = true
             };
             _rdoCustomFolder.CheckedChanged += (s, e) => UpdateButtons();
 
             _txtOutput = new TextBox
             {
-                Location = new Point(36, 74),
+                Location = new Point(36, 100),
                 Width = 520,
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 Enabled = false
@@ -119,7 +134,7 @@ namespace PublisherToPdf
             _btnBrowseOut = new Button
             {
                 Text = "Browse…",
-                Location = new Point(566, 72),
+                Location = new Point(566, 98),
                 Width = 90,
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
                 Enabled = false
@@ -135,8 +150,8 @@ namespace PublisherToPdf
 
             _chkFitToContent = new CheckBox
             {
-                Text = "Fit page to content (prevents clipping of items past the page edge)",
-                Location = new Point(14, 98),
+                Text = "Fit page to content (PDF only: prevents clipping of items past the page edge)",
+                Location = new Point(14, 124),
                 AutoSize = true,
                 Checked = true
             };
@@ -144,28 +159,28 @@ namespace PublisherToPdf
             _chkOpenWhenDone = new CheckBox
             {
                 Text = "Open the output folder when finished",
-                Location = new Point(14, 122),
+                Location = new Point(14, 148),
                 AutoSize = true,
                 Checked = true
             };
 
             grpOut.Controls.AddRange(new Control[]
             {
-                _rdoSameFolder, _rdoCustomFolder, _txtOutput, _btnBrowseOut, _chkFitToContent, _chkOpenWhenDone
+                formatPanel, _rdoSameFolder, _rdoCustomFolder, _txtOutput, _btnBrowseOut, _chkFitToContent, _chkOpenWhenDone
             });
 
             // --- Progress + action row ---
             _progress = new ProgressBar
             {
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                Location = new Point(12, 462),
+                Location = new Point(12, 490),
                 Size = new Size(680, 18)
             };
             _status = new Label
             {
                 Text = "Ready.",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                Location = new Point(12, 486),
+                Location = new Point(12, 514),
                 Size = new Size(470, 40),
                 AutoSize = false
             };
@@ -173,7 +188,7 @@ namespace PublisherToPdf
             {
                 Text = "Convert",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
-                Location = new Point(566, 488),
+                Location = new Point(566, 516),
                 Size = new Size(126, 34)
             };
             _btnConvert.Click += BtnConvert_Click;
@@ -181,7 +196,7 @@ namespace PublisherToPdf
             {
                 Text = "Cancel",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
-                Location = new Point(482, 488),
+                Location = new Point(482, 516),
                 Size = new Size(78, 34),
                 Enabled = false
             };
@@ -337,6 +352,8 @@ namespace PublisherToPdf
                 SetItemStatus(j.Item, "Pending");
 
             bool fitToContent = _chkFitToContent.Checked;
+            bool wantPdf = _rdoPdf.Checked || _rdoBoth.Checked;
+            bool wantIdml = _rdoIdml.Checked || _rdoBoth.Checked;
 
             _cancelRequested = false;
             SetBusy(true);
@@ -344,7 +361,7 @@ namespace PublisherToPdf
             _progress.Maximum = jobs.Count;
             _progress.Value = 0;
 
-            _worker = new Thread(() => RunBatch(jobs, customFolder, fitToContent))
+            _worker = new Thread(() => RunBatch(jobs, customFolder, fitToContent, wantPdf, wantIdml))
             {
                 IsBackground = true,
                 Name = "PublisherConvert"
@@ -359,7 +376,7 @@ namespace PublisherToPdf
             public string Input;
         }
 
-        private void RunBatch(List<Job> jobs, string customFolder, bool fitToContent)
+        private void RunBatch(List<Job> jobs, string customFolder, bool fitToContent, bool wantPdf, bool wantIdml)
         {
             int ok = 0, failed = 0, skipped = 0;
             string lastOutputDir = null;
@@ -380,23 +397,47 @@ namespace PublisherToPdf
                     }
 
                     string dir = customFolder ?? Path.GetDirectoryName(job.Input);
-                    string outPath = Path.Combine(dir, Path.GetFileNameWithoutExtension(job.Input) + ".pdf");
+                    string stem = Path.Combine(dir, Path.GetFileNameWithoutExtension(job.Input));
                     lastOutputDir = dir;
 
                     SetItemStatus(job.Item, "Converting…");
                     SetStatus("Converting " + Path.GetFileName(job.Input) + " …");
 
-                    try
+                    bool retried = false;
+                    while (true)
                     {
-                        converter.Convert(job.Input, outPath, fitToContent);
-                        SetItemStatus(job.Item, "Done");
-                        ok++;
-                    }
-                    catch (Exception ex)
-                    {
-                        SetItemStatus(job.Item, "Failed");
-                        job.Item.ToolTipText = ex.Message;
-                        failed++;
+                        try
+                        {
+                            var notes = new List<string>();
+                            if (wantPdf)
+                                converter.Convert(job.Input, stem + ".pdf", fitToContent);
+                            if (wantIdml)
+                                notes.AddRange(converter.ConvertToIdml(job.Input, stem + ".idml", new Idml.IdmlOptions()));
+                            if (notes.Count > 0)
+                            {
+                                SetItemStatus(job.Item, "Done (" + notes.Count + " notes)");
+                                job.Item.ToolTipText = string.Join("\r\n", notes.Take(30)) + (notes.Count > 30 ? "\r\n…" : "");
+                            }
+                            else SetItemStatus(job.Item, "Done");
+                            ok++;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Publisher crashes now and then under automation; start a fresh one and retry once.
+                            if (!retried && PublisherConverter.IsPublisherGone(ex))
+                            {
+                                retried = true;
+                                LogError(job.Input + " (Publisher went away; restarting and retrying)", ex);
+                                SetStatus("Publisher stopped responding; restarting it for " + Path.GetFileName(job.Input) + " …");
+                                try { converter.Restart(); continue; }
+                                catch (Exception rex) { ex = rex; }
+                            }
+                            SetItemStatus(job.Item, "Failed");
+                            job.Item.ToolTipText = ex.Message + "\r\n(details: " + ErrorLogPath + ")";
+                            LogError(job.Input, ex);
+                            failed++;
+                        }
+                        break;
                     }
 
                     StepProgress();
@@ -417,6 +458,20 @@ namespace PublisherToPdf
             BeginInvoke((Action)(() => FinishBatch(ok, failed, skipped, customFolder ?? lastOutputDir)));
         }
 
+        /// <summary>Full exception details of failed conversions, for bug reports.</summary>
+        private static readonly string ErrorLogPath = Path.Combine(Path.GetTempPath(), "PublisherToPdf-errors.log");
+
+        private static void LogError(string input, Exception ex)
+        {
+            try
+            {
+                File.AppendAllText(ErrorLogPath,
+                    DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "  " + input + "\r\n" + ex + "\r\n" +
+                    "[" + PublisherConverter.LastDisposeNote + "]\r\n" + PublisherConverter.Trace + "\r\n");
+            }
+            catch { }
+        }
+
         private void FinishBatch(int ok, int failed, int skipped, string outputDir)
         {
             SetBusy(false);
@@ -435,7 +490,7 @@ namespace PublisherToPdf
             if (failed > 0)
             {
                 MessageBox.Show(this,
-                    failed + " file(s) could not be converted. Hover the \"Failed\" rows to see why.",
+                    failed + " file(s) could not be converted. Hover the \"Failed\" rows to see why; full details are in\r\n" + ErrorLogPath,
                     "Some files failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -454,8 +509,11 @@ namespace PublisherToPdf
             _rdoCustomFolder.Enabled = !busy;
             _txtOutput.Enabled = !busy && _rdoCustomFolder.Checked;
             _btnBrowseOut.Enabled = !busy && _rdoCustomFolder.Checked;
-            _chkFitToContent.Enabled = !busy;
+            _chkFitToContent.Enabled = !busy && !_rdoIdml.Checked;
             _chkOpenWhenDone.Enabled = !busy;
+            _rdoPdf.Enabled = !busy;
+            _rdoIdml.Enabled = !busy;
+            _rdoBoth.Enabled = !busy;
         }
 
         private void UpdateButtons()
@@ -467,6 +525,7 @@ namespace PublisherToPdf
             _btnConvert.Enabled = hasItems;
             _txtOutput.Enabled = _rdoCustomFolder.Checked;
             _btnBrowseOut.Enabled = _rdoCustomFolder.Checked;
+            _chkFitToContent.Enabled = !_rdoIdml.Checked;
         }
 
         private void SetItemStatus(ListViewItem item, string status)
@@ -478,7 +537,7 @@ namespace PublisherToPdf
             }
             item.SubItems[2].Text = status;
             item.ForeColor =
-                status == "Done" ? Color.ForestGreen :
+                status.StartsWith("Done") ? Color.ForestGreen :
                 status == "Failed" ? Color.Firebrick :
                 status == "Skipped" ? Color.DimGray :
                 SystemColors.WindowText;

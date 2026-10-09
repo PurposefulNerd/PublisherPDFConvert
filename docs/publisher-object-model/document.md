@@ -1,0 +1,136 @@
+## _Document
+- prop ActivePrinter : String {get;set}
+- prop ActiveView : View {get}
+- prop ActiveWindow : Window {get}
+- prop AdvancedPrintOptions : AdvancedPrintOptions {get}
+- prop Application : Application {get}
+- prop AvailableBuildingBlocks : BuildingBlocks {get}
+- prop BorderArts : BorderArts {get}
+- prop ColorMode : PbColorMode {get}
+- prop ColorScheme : ColorScheme {get;set}
+- prop ColorsInUse : ColorsInUse {get}
+- prop DefaultTabStop : Object {get;set}
+- prop DocumentDirection : PbDirectionType {get;set}
+- prop EnvelopeVisible : Boolean {get;set}
+- prop Find : FindReplace {get}
+- prop FullName : String {get}
+- prop IsDataSourceConnected : Boolean {get}
+- prop IsWizard : Boolean {get}
+- prop LayoutGuides : LayoutGuides {get}
+- prop MailEnvelope : MsoEnvelope {get}
+- prop MailMerge : MailMerge {get}
+- prop MasterPages : MasterPages {get}
+- prop Name : String {get}
+- prop Pages : Pages {get}
+- prop PageSetup : PageSetup {get}
+- prop Parent : Object {get}
+- prop Path : String {get}
+- prop PersonalInformationSet : PbPersonalInfoSet {get;set}
+- prop Plates : Plates {get}
+- prop PrintPageBackgrounds : Boolean {get;set}
+- prop PrintStyle : PbPrintStyle {get}
+- prop PublicationType : PbPublicationType {get}
+- prop ReadOnly : Boolean {get}
+- prop RedoActionsAvailable : Int32 {get}
+- prop RemovePersonalInformation : Boolean {get;set}
+- prop Saved : Boolean {get}
+- prop SaveFormat : PbFileFormat {get}
+- prop ScratchArea : ScratchArea {get}
+- prop Sections : Sections {get}
+- prop Selection : Selection {get}
+- prop Stories : Stories {get}
+- prop SurplusShapes : ShapeRange {get}
+- prop Tags : Tags {get}
+- prop TextStyles : TextStyles {get}
+- prop UndoActionsAvailable : Int32 {get}
+- prop ViewBoundaries : Boolean {get;set}
+- prop ViewBoundariesAndGuides : Boolean {get;set}
+- prop ViewGuides : Boolean {get;set}
+- prop ViewHorizontalBaseLineGuides : Boolean {get;set}
+- prop ViewTwoPageSpread : Boolean {get;set}
+- prop ViewVerticalBaseLineGuides : Boolean {get;set}
+- prop WebNavigationBarSets : WebNavigationBarSets {get}
+- prop Wizard : Wizard {get}
+- method BeginCustomUndoAction(String ActionName) : Void
+- method ChangeDocument(PbWizard Wizard, Int32 Design) : Void
+- method Close() : Void
+- method ConvertPublicationType(PbPublicationType Value) : Void
+- method CreatePlateCollection(PbColorMode Mode) : Plates
+- method EndCustomUndoAction() : Void
+- method EnterColorMode(PbColorMode Mode, Object Plates, Boolean DeleteExcessInks) : Void
+- method EnterColorMode10(PbColorMode Mode, Object Plates) : Void
+- method ExportAsFixedFormat(PbFixedFormatType Format, String Filename, PbFixedFormatIntent Intent, Boolean IncludeDocumentProperties, Int32 ColorDownsampleTarget, Int32 ColorDownsampleThreshold, Int32 OneBitDownsampleTarget, Int32 OneBitDownsampleThreshold, Int32 From, Int32 To, Int32 Copies, Boolean Collate, PbPrintStyle PrintStyle, Boolean DocStructureTags, Boolean BitmapMissingFonts, Boolean UseISO19005_1, Object ExternalExporter) : Void
+- method FindShapeByWizardTag(PbWizardTag WizardTag, Int32 Instance) : ShapeRange
+- method FindShapesByTag(String TagName) : ShapeRange
+- method PrintOut(Int32 From, Int32 To, String PrintToFile, Int32 Copies, Boolean Collate) : Void
+- method PrintOutEx(Int32 From, Int32 To, String PrintToFile, Int32 Copies, Boolean Collate, PbPrintStyle PrintStyle) : Void
+- method Redo(Int32 Count) : Void
+- method Save() : Void
+- method SaveAs(Object Filename, PbFileFormat Format, Boolean AddToRecentFiles) : Void
+- method SelectID(Int32 oh) : Void
+- method SetBusinessInformation(String Name) : Void
+- method Undo(Int32 Count) : Void
+- method UndoClear() : Void
+- method UpdateOLEObjects() : Void
+- method WebPagePreview() : Void
+## _Application
+- prop ActiveDocument : Document {get}
+- prop ActiveWindow : Window {get}
+- prop Application : Application {get}
+- prop Assistance : IAssistance {get}
+- prop Assistant : Assistant {get}
+- prop AutomationSecurity : MsoAutomationSecurity {get;set}
+- prop Build : Int32 {get}
+- prop CaptionStyles : CaptionStyles {get}
+- prop ColorSchemes : ColorSchemes {get}
+- prop COMAddIns : COMAddIns {get}
+- prop CommandBars : CommandBars {get}
+- prop Documents : Documents {get}
+- prop FileDialog[MsoFileDialogType Type] : FileDialog {get}
+- prop FileSearch : FileSearch {get}
+- prop InsertBarcodeVisible : Boolean {get;set}
+- prop InstalledPrinters : InstalledPrinters {get}
+- prop Language : Int32 {get}
+- prop MsoDebugOptions : MsoDebugOptions {get}
+- prop Name : String {get}
+- prop OfficeDataSourceObject : OfficeDataSourceObject {get}
+- prop Options : Options {get}
+- prop Parent : Object {get}
+- prop Path : String {get}
+- prop PathSeparator : String {get}
+- prop PrintPreview : Boolean {get;set}
+- prop ProductCode : String {get}
+- prop ScreenUpdating : Boolean {get;set}
+- prop Selection : Selection {get}
+- prop ShowFollowUpCustom : String {get;set}
+- prop SnapToGuides : Boolean {get;set}
+- prop SnapToObjects : Boolean {get;set}
+- prop TemplateFolderPath : String {get}
+- prop ValidateAddressVisible : Boolean {get;set}
+- prop Version : String {get}
+- prop WebOptions : WebOptions {get}
+- prop WizardCatalogVisible : Boolean {get;set}
+- method CentimetersToPoints(Single Value) : Single
+- method ChangeFileOpenDirectory(String Dir) : Void
+- method EmusToPoints(Single Value) : Single
+- method Help(PbHelpType HelpType) : Void
+- method InchesToPoints(Single Value) : Single
+- method IsValidObject(Object Object) : Boolean
+- method LaunchWebService() : Void
+- method LinesToPoints(Single Value) : Single
+- method MillimetersToPoints(Single Value) : Single
+- method NewDocument(PbWizard Wizard, Int32 Design) : Document
+- method Open(String Filename, Boolean ReadOnly, Boolean AddToRecentFiles, PbSaveOptions SaveChanges) : Document
+- method PicasToPoints(Single Value) : Single
+- method PixelsToPoints(Single Value) : Single
+- method PointsToCentimeters(Single Value) : Single
+- method PointsToEmus(Single Value) : Single
+- method PointsToInches(Single Value) : Single
+- method PointsToLines(Single Value) : Single
+- method PointsToMillimeters(Single Value) : Single
+- method PointsToPicas(Single Value) : Single
+- method PointsToPixels(Single Value) : Single
+- method PointsToTwips(Single Value) : Single
+- method Quit() : Void
+- method ShowWizardCatalog(PbWizard Wizard) : Void
+- method TwipsToPoints(Single Value) : Single
